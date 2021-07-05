@@ -1,23 +1,20 @@
 package loop;
 
+import loop.help.Builder;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
 public class Loop implements Runnable {
-    protected Double delta = 30.0;
-    protected StopLoop stop = new StopLoop(this);
+    protected Double tickrate;
     protected BiConsumer<Double, StopLoop> action;
+    protected StopLoop stop = new StopLoop(this);
     protected List<Exception> exceptionList = new ArrayList<>();
 
-    @Override
-    public void run() {
-//        double delta = 1000.0 / this.delta;
-        while (!this.stop.stopLoop()) {
-            this.action.accept(delta, this.stop);
-            tick(delta);
-        }
+    public static LoopBuilder builder() {
+        return new LoopBuilder();
     }
 
     protected void tick(Double delta) {
@@ -28,14 +25,13 @@ public class Loop implements Runnable {
         }
     }
 
-    public Loop setAction(BiConsumer<Double, StopLoop> actions) {
-        this.action = actions;
-        return this;
-    }
-
-    public Loop setTickRate(Double delta) {
-        this.delta = delta;
-        return this;
+    @Override
+    public void run() {
+//        double delta = 1000.0 / this.delta;
+        while (!this.stop.stopLoop()) {
+            this.action.accept(tickrate, this.stop);
+            tick(tickrate);
+        }
     }
 
     public static class StopLoop {
@@ -52,6 +48,50 @@ public class Loop implements Runnable {
 
         protected boolean stopLoop() {
             return this.stopFlag;
+        }
+    }
+
+    public static abstract class LoopBuilderAbstract<C extends Loop, B extends LoopBuilderAbstract<C, B>> extends Builder<C, B> {
+        protected Double tickrate = 30.0;
+        protected BiConsumer<Double, StopLoop> action;
+
+        public B setAction(BiConsumer<Double, StopLoop> actions) {
+            this.action = actions;
+            return _this();
+        }
+
+        public B setTickRate(Double delta) {
+            this.tickrate = delta;
+            return _this();
+        }
+
+        @Override
+        public C build() throws Exception {
+            C instance = super.build();
+            instance.action = action;
+            instance.tickrate = tickrate;
+            return instance;
+        }
+    }
+
+    public static class LoopBuilder extends LoopBuilderAbstract<Loop, LoopBuilder> {
+        @Override
+        public LoopBuilder _this() {
+            return this;
+        }
+
+        @Override
+        public Loop instance() {
+            return new Loop();
+        }
+
+        @Override
+        public Loop build() {
+            try {
+                return super.build();
+            } catch (Exception e) {
+                return null;
+            }
         }
     }
 }

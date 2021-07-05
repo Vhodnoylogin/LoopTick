@@ -15,14 +15,15 @@ class LoopTest {
 
         int codeTime = Math.toIntExact(wrapCodeWithTime(() -> {
             AtomicInteger it = new AtomicInteger();
-            Loop action = new Loop()
+            Loop action = Loop.builder()
                     .setTickRate((double) tickrate)
                     .setAction((delta, stop) -> {
 //                    System.out.println(delta);
                         if (it.getAndIncrement() > endCount) {
                             stop.stop();
                         }
-                    });
+                    })
+                    .build();
             action.run();
 //            Future<?> result = Executors.newSingleThreadExecutor().submit(action);
 //            while (!result.isDone()) {
