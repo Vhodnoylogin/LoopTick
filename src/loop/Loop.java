@@ -6,21 +6,25 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
 public class Loop implements Runnable {
-    protected Integer delta = 30;
+    protected Double delta = 30.0;
     protected StopLoop stop = new StopLoop(this);
     protected BiConsumer<Double, StopLoop> action;
     protected List<Exception> exceptionList = new ArrayList<>();
 
     @Override
     public void run() {
-        Double delta = 1000.0 / this.delta;
+//        double delta = 1000.0 / this.delta;
         while (!this.stop.stopLoop()) {
-            this.action.accept(delta / 1000, this.stop);
-            try {
-                TimeUnit.MILLISECONDS.sleep(delta.longValue());
-            } catch (InterruptedException e) {
-                this.exceptionList.add(e);
-            }
+            this.action.accept(delta, this.stop);
+            tick(delta);
+        }
+    }
+
+    protected void tick(Double delta) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(delta.longValue());
+        } catch (InterruptedException e) {
+            this.exceptionList.add(e);
         }
     }
 
@@ -29,7 +33,7 @@ public class Loop implements Runnable {
         return this;
     }
 
-    public Loop setTickRate(Integer delta) {
+    public Loop setTickRate(Double delta) {
         this.delta = delta;
         return this;
     }
