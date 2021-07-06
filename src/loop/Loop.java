@@ -19,6 +19,7 @@ public class Loop implements Runnable {
 
     protected void tick(Double delta) {
         try {
+            System.out.println(delta.longValue());
             TimeUnit.MILLISECONDS.sleep(delta.longValue());
         } catch (InterruptedException e) {
             this.exceptionList.add(e);
@@ -65,12 +66,21 @@ public class Loop implements Runnable {
             return _this();
         }
 
+        public B setTickRate(Integer delta) {
+            this.tickrate = Double.valueOf(delta);
+            return _this();
+        }
+
         @Override
-        public C build() throws Exception {
-            C instance = super.build();
-            instance.action = action;
-            instance.tickrate = tickrate;
-            return instance;
+        public C build() {
+            try {
+                C instance = super.build();
+                instance.action = action;
+                instance.tickrate = tickrate;
+                return instance;
+            } catch (Exception e) {
+                return null;
+            }
         }
     }
 
@@ -83,15 +93,6 @@ public class Loop implements Runnable {
         @Override
         public Loop instance() {
             return new Loop();
-        }
-
-        @Override
-        public Loop build() {
-            try {
-                return super.build();
-            } catch (Exception e) {
-                return null;
-            }
         }
     }
 }
