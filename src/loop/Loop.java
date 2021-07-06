@@ -22,6 +22,7 @@ public class Loop implements Runnable {
             System.out.println(delta.longValue());
             TimeUnit.MILLISECONDS.sleep(delta.longValue());
         } catch (InterruptedException e) {
+            e.printStackTrace();
             this.exceptionList.add(e);
         }
     }
