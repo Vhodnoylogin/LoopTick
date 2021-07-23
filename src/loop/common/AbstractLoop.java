@@ -1,4 +1,4 @@
-package second.loop.common;
+package loop.common;
 
 import loop.help.builder.Builder;
 import loop.help.consumers.LoopConsumer;

@@ -1,4 +1,4 @@
-package second.loop.constant.tickrate;
+package loop.constant.tickrate;
 
 import loop.help.consumers.LoopConsumer;
 

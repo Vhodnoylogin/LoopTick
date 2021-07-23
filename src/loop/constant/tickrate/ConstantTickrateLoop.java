@@ -1,6 +1,6 @@
-package second.loop.constant.tickrate;
+package loop.constant.tickrate;
 
-import second.loop.common.AbstractLoop;
+import loop.common.AbstractLoop;
 
 public class ConstantTickrateLoop extends AbstractLoop {
     protected Double tickrate;
