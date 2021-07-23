@@ -1,4 +1,4 @@
-package loop.help;
+package loop.help.builder;
 
 public abstract class Builder<C, B extends Builder<C, B>> implements IBuilder<C, B> {
     protected abstract B _this();

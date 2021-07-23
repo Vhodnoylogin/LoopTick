@@ -1,9 +1,8 @@
 package loop;
 
-import loop.help.Builder;
+import loop.help.builder.Builder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
@@ -11,7 +10,8 @@ public class Loop implements Runnable {
     protected Double tickrate;
     protected BiConsumer<Double, StopLoop> action;
     protected StopLoop stop = new StopLoop(this);
-    protected List<Exception> exceptionList = new ArrayList<>();
+    //    protected List<Exception> exceptionList = new ArrayList<>();
+    protected Queue<Exception> exceptionList;
 
     public static LoopBuilder builder() {
         return new LoopBuilder();
@@ -19,7 +19,6 @@ public class Loop implements Runnable {
 
     protected void tick(Double delta) {
         try {
-            System.out.println(delta.longValue());
             TimeUnit.MILLISECONDS.sleep(delta.longValue());
         } catch (InterruptedException e) {
             e.printStackTrace();
